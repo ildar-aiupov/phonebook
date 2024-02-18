@@ -44,24 +44,24 @@
 
 По второму заданию предлагаю 3 возможных решения. Все они занимают буквально несколько секунд (тестировалось на Postgres 16.1)
 
-Решение №1 (выполняется около 3 сек.)
-UPDATE full_names
-SET status = short_names.status
-FROM short_names
+Решение №1 (выполняется около 3 сек.)  
+UPDATE full_names  
+SET status = short_names.status  
+FROM short_names  
 WHERE short_names.name = SPLIT_PART(full_names.name, '.', 1);
 
-Решение №2 (выполняется около 2 сек.)
-CREATE TABLE tmptable AS
-SELECT full_names.id, full_names.name, short_names.status
-FROM full_names
-LEFT JOIN short_names ON short_names.name = SPLIT_PART(full_names.name, '.', 1);
-DROP TABLE full_names;
+Решение №2 (выполняется около 2 сек.)  
+CREATE TABLE tmptable AS  
+SELECT full_names.id, full_names.name, short_names.status  
+FROM full_names  
+LEFT JOIN short_names ON short_names.name = SPLIT_PART(full_names.name, '.', 1);  
+DROP TABLE full_names;  
 ALTER TABLE tmptable RENAME TO full_names;
 
-Решение №3 (выполняется около 2 сек.)
-CREATE TABLE tmptable AS
-SELECT full_names.id, full_names.name, short_names.status
-FROM full_names
-LEFT JOIN short_names ON short_names.name = SPLIT_PART(full_names.name, '.', 1);
-TRUNCATE full_names;
+Решение №3 (выполняется около 2 сек.)  
+CREATE TABLE tmptable AS  
+SELECT full_names.id, full_names.name, short_names.status  
+FROM full_names  
+LEFT JOIN short_names ON short_names.name = SPLIT_PART(full_names.name, '.', 1);  
+TRUNCATE full_names;  
 INSERT INTO full_names SELECT * from tmptable;
